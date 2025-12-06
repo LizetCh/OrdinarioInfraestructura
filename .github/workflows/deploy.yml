@@ -1,4 +1,4 @@
-name: Deploy to Azure App Service via ACR
+name: Deploy to Azure Web App with ACR
 
 on:
   push:
@@ -13,21 +13,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to Azure Container Registry
+      - name: Docker Login to ACR
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:latest .
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:latest
 
-      - name: Azure WebApp Deploy
-        uses: azure/webapps-deploy@v2
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-container-actions@v1
         with:
           app-name: ${{ secrets.WEBAPP_NAME }}
-          resource-group-name: ${{ secrets.RESOURCE_GROUP }}
           images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.IMAGE_NAME }}:latest
