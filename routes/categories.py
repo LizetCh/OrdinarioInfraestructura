@@ -75,7 +75,7 @@ def get_categories():
     for category in categories:
         category['_id'] = str(category['_id'])
 
-    return jsonify(categories), 200
+    return jsonify({"categories": categories}), 200
 
 # actualizar categoría
 
