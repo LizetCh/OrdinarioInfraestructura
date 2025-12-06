@@ -15,6 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Login to Azure Container Registry (ACR)
         uses: azure/docker-login@v1
         with:
